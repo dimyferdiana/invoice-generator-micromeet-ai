@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micromeet - PO, Invoice & Receipt Generator</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="40" width="25" height="50" fill="#2563EB"/>
+                    <rect x="40" y="25" width="25" height="65" fill="#2563EB"/>
+                    <polygon points="40,25 65,25 90,0 65,0" fill="#2563EB"/>
+                    <rect x="70" y="10" width="20" height="80" fill="#2563EB"/>
+                </svg>
+                <span class="logo-text">Micromeet</span>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-item active" data-tab="dashboard">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    Dashboard
+                </button>
+                <button class="nav-item" data-tab="purchase-order">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    Purchase Order
+                </button>
+                <button class="nav-item" data-tab="invoice">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="12" y1="18" x2="12" y2="12"></line>
+                        <line x1="9" y1="15" x2="15" y2="15"></line>
+                    </svg>
+                    Invoice
+                </button>
+                <button class="nav-item" data-tab="receipt">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    Bukti Bayar
+                </button>
+                <button class="nav-item" data-tab="saved">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    Dokumen Tersimpan
+                </button>
+            </nav>
+
+            <div class="company-info">
+                <p>Micromeet Technology</p>
+                <p>(Singapore) Pte Ltd</p>
+                <a href="https://web.micromeet.ai/home" target="_blank">web.micromeet.ai</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Tab -->
+            <section id="dashboard" class="tab-content active">
+                <div class="page-header">
+                    <h1>Dashboard</h1>
+                    <p>Selamat datang di sistem pengelolaan dokumen Micromeet</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon po">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="po-count">0</h3>
+                            <p>Purchase Orders</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon invoice">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <line x1="12" y1="18" x2="12" y2="12"></line>
+                                <line x1="9" y1="15" x2="15" y2="15"></line>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="invoice-count">0</h3>
+                            <p>Invoices</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon receipt">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="receipt-count">0</h3>
+                            <p>Bukti Bayar</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h2>Aksi Cepat</h2>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="switchTab('purchase-order')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Buat Purchase Order
+                        </button>
+                        <button class="action-btn" onclick="switchTab('invoice')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Buat Invoice
+                        </button>
+                        <button class="action-btn" onclick="switchTab('receipt')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Buat Bukti Bayar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sample-documents">
+                    <h2>Contoh Dokumen</h2>
+                    <div class="sample-cards">
+                        <div class="sample-card" onclick="loadSamplePO('nurhaini')">
+                            <h4>PO - Nurhaini</h4>
+                            <p>Bank Transfer - BCA</p>
+                            <span class="badge">Contoh</span>
+                        </div>
+                        <div class="sample-card" onclick="loadSamplePO('niluh')">
+                            <h4>PO - dr Niluh Suwasanti, Sp.PK</h4>
+                            <p>Bank Transfer</p>
+                            <span class="badge">Contoh</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Purchase Order Tab -->
+            <section id="purchase-order" class="tab-content">
+                <div class="page-header">
+                    <h1>Purchase Order</h1>
+                    <p>Buat dan kelola Purchase Order</p>
+                </div>
+
+                <div class="form-container">
+                    <form id="po-form" class="document-form">
+                        <div class="form-section">
+                            <h3>Informasi PO</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="po-number">Nomor PO</label>
+                                    <input type="text" id="po-number" placeholder="PO-001" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="po-date">Tanggal</label>
+                                    <input type="date" id="po-date" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Informasi Penerima</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="po-recipient-name">Nama</label>
+                                    <input type="text" id="po-recipient-name" placeholder="Nama lengkap" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="po-recipient-address">Alamat</label>
+                                    <textarea id="po-recipient-address" placeholder="Alamat lengkap"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="po-recipient-phone">Telepon</label>
+                                    <input type="text" id="po-recipient-phone" placeholder="Nomor telepon">
+                                </div>
+                                <div class="form-group">
+                                    <label for="po-recipient-email">Email</label>
+                                    <input type="email" id="po-recipient-email" placeholder="Email">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Metode Pembayaran</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="po-payment-method">Metode Pembayaran</label>
+                                    <select id="po-payment-method">
+                                        <option value="bank-transfer">Bank Transfer</option>
+                                        <option value="cash">Cash</option>
+                                        <option value="credit-card">Credit Card</option>
+                                        <option value="e-wallet">E-Wallet</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="po-bank-name">Nama Bank</label>
+                                    <input type="text" id="po-bank-name" placeholder="Nama bank">
+                                </div>
+                                <div class="form-group">
+                                    <label for="po-account-number">Nomor Rekening</label>
+                                    <input type="text" id="po-account-number" placeholder="Nomor rekening">
+                                </div>
+                                <div class="form-group">
+                                    <label for="po-account-name">Atas Nama</label>
+                                    <input type="text" id="po-account-name" placeholder="Nama pemilik rekening">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Item Pesanan</h3>
+                            <div class="items-table-container">
+                                <table class="items-table" id="po-items-table">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Deskripsi</th>
+                                            <th>Qty</th>
+                                            <th>Harga</th>
+                                            <th>Total</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="po-items-body">
+                                        <tr>
+                                            <td>1</td>
+                                            <td><input type="text" class="item-desc" placeholder="Deskripsi item"></td>
+                                            <td><input type="number" class="item-qty" value="1" min="1"></td>
+                                            <td><input type="number" class="item-price" value="0" min="0"></td>
+                                            <td class="item-total">0</td>
+                                            <td><button type="button" class="btn-remove" onclick="removeItem(this, 'po')">×</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button type="button" class="btn-add-item" onclick="addItem('po')">+ Tambah Item</button>
+                            </div>
+
+                            <div class="totals-section">
+                                <div class="total-row">
+                                    <span>Subtotal:</span>
+                                    <span id="po-subtotal">Rp 0</span>
+                                </div>
+                                <div class="total-row">
+                                    <span>Tax (%):</span>
+                                    <input type="number" id="po-tax-percent" value="0" min="0" max="100">
+                                </div>
+                                <div class="total-row">
+                                    <span>Pajak:</span>
+                                    <span id="po-tax-amount">Rp 0</span>
+                                </div>
+                                <div class="total-row grand-total">
+                                    <span>Grand Total:</span>
+                                    <span id="po-grand-total">Rp 0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Catatan</h3>
+                            <div class="form-group full-width">
+                                <textarea id="po-notes" placeholder="Catatan tambahan..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="clearForm('po')">Reset</button>
+                            <button type="button" class="btn btn-secondary" onclick="saveDocument('po')">Simpan</button>
+                            <button type="button" class="btn btn-primary" onclick="previewDocument('po')">Preview & Cetak</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Invoice Tab -->
+            <section id="invoice" class="tab-content">
+                <div class="page-header">
+                    <h1>Invoice</h1>
+                    <p>Buat dan kelola Invoice</p>
+                </div>
+
+                <div class="form-container">
+                    <form id="invoice-form" class="document-form">
+                        <div class="form-section">
+                            <h3>Informasi Invoice</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="invoice-number">Nomor Invoice</label>
+                                    <input type="text" id="invoice-number" placeholder="INV-001" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="invoice-date">Tanggal</label>
+                                    <input type="date" id="invoice-date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="invoice-due-date">Jatuh Tempo</label>
+                                    <input type="date" id="invoice-due-date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="invoice-po-ref">Referensi PO</label>
+                                    <input type="text" id="invoice-po-ref" placeholder="PO-001">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Informasi Pelanggan</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="invoice-customer-name">Nama</label>
+                                    <input type="text" id="invoice-customer-name" placeholder="Nama pelanggan" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="invoice-customer-address">Alamat</label>
+                                    <textarea id="invoice-customer-address" placeholder="Alamat lengkap"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="invoice-customer-phone">Telepon</label>
+                                    <input type="text" id="invoice-customer-phone" placeholder="Nomor telepon">
+                                </div>
+                                <div class="form-group">
+                                    <label for="invoice-customer-email">Email</label>
+                                    <input type="email" id="invoice-customer-email" placeholder="Email">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Informasi Pembayaran</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="invoice-payment-method">Metode Pembayaran</label>
+                                    <select id="invoice-payment-method">
+                                        <option value="bank-transfer">Bank Transfer</option>
+                                        <option value="cash">Cash</option>
+                                        <option value="credit-card">Credit Card</option>
+                                        <option value="e-wallet">E-Wallet</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="invoice-bank-name">Nama Bank</label>
+                                    <input type="text" id="invoice-bank-name" placeholder="Nama bank">
+                                </div>
+                                <div class="form-group">
+                                    <label for="invoice-account-number">Nomor Rekening</label>
+                                    <input type="text" id="invoice-account-number" placeholder="Nomor rekening">
+                                </div>
+                                <div class="form-group">
+                                    <label for="invoice-account-name">Atas Nama</label>
+                                    <input type="text" id="invoice-account-name" placeholder="Nama pemilik rekening">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Item</h3>
+                            <div class="items-table-container">
+                                <table class="items-table" id="invoice-items-table">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Deskripsi</th>
+                                            <th>Qty</th>
+                                            <th>Harga</th>
+                                            <th>Total</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="invoice-items-body">
+                                        <tr>
+                                            <td>1</td>
+                                            <td><input type="text" class="item-desc" placeholder="Deskripsi item"></td>
+                                            <td><input type="number" class="item-qty" value="1" min="1"></td>
+                                            <td><input type="number" class="item-price" value="0" min="0"></td>
+                                            <td class="item-total">0</td>
+                                            <td><button type="button" class="btn-remove" onclick="removeItem(this, 'invoice')">×</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button type="button" class="btn-add-item" onclick="addItem('invoice')">+ Tambah Item</button>
+                            </div>
+
+                            <div class="totals-section">
+                                <div class="total-row">
+                                    <span>Subtotal:</span>
+                                    <span id="invoice-subtotal">Rp 0</span>
+                                </div>
+                                <div class="total-row">
+                                    <span>Tax (%):</span>
+                                    <input type="number" id="invoice-tax-percent" value="0" min="0" max="100">
+                                </div>
+                                <div class="total-row">
+                                    <span>Pajak:</span>
+                                    <span id="invoice-tax-amount">Rp 0</span>
+                                </div>
+                                <div class="total-row grand-total">
+                                    <span>Grand Total:</span>
+                                    <span id="invoice-grand-total">Rp 0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Catatan</h3>
+                            <div class="form-group full-width">
+                                <textarea id="invoice-notes" placeholder="Catatan tambahan..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="clearForm('invoice')">Reset</button>
+                            <button type="button" class="btn btn-secondary" onclick="saveDocument('invoice')">Simpan</button>
+                            <button type="button" class="btn btn-primary" onclick="previewDocument('invoice')">Preview & Cetak</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Receipt Tab -->
+            <section id="receipt" class="tab-content">
+                <div class="page-header">
+                    <h1>Bukti Bayar</h1>
+                    <p>Buat dan kelola Bukti Pembayaran</p>
+                </div>
+
+                <div class="form-container">
+                    <form id="receipt-form" class="document-form">
+                        <div class="form-section">
+                            <h3>Informasi Bukti Bayar</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="receipt-number">Nomor Bukti Bayar</label>
+                                    <input type="text" id="receipt-number" placeholder="RCP-001" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="receipt-date">Tanggal Pembayaran</label>
+                                    <input type="date" id="receipt-date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="receipt-invoice-ref">Referensi Invoice</label>
+                                    <input type="text" id="receipt-invoice-ref" placeholder="INV-001">
+                                </div>
+                                <div class="form-group">
+                                    <label for="receipt-po-ref">Referensi PO</label>
+                                    <input type="text" id="receipt-po-ref" placeholder="PO-001">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Diterima Dari</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="receipt-payer-name">Nama Pembayar</label>
+                                    <input type="text" id="receipt-payer-name" placeholder="Nama pembayar" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="receipt-payer-address">Alamat</label>
+                                    <textarea id="receipt-payer-address" placeholder="Alamat lengkap"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Detail Pembayaran</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="receipt-payment-method">Metode Pembayaran</label>
+                                    <select id="receipt-payment-method">
+                                        <option value="bank-transfer">Bank Transfer</option>
+                                        <option value="cash">Cash</option>
+                                        <option value="credit-card">Credit Card</option>
+                                        <option value="e-wallet">E-Wallet</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="receipt-bank-name">Nama Bank</label>
+                                    <input type="text" id="receipt-bank-name" placeholder="Nama bank">
+                                </div>
+                                <div class="form-group">
+                                    <label for="receipt-account-number">Nomor Rekening</label>
+                                    <input type="text" id="receipt-account-number" placeholder="Nomor rekening">
+                                </div>
+                                <div class="form-group">
+                                    <label for="receipt-amount">Jumlah Pembayaran</label>
+                                    <input type="number" id="receipt-amount" placeholder="0" min="0" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Keterangan</h3>
+                            <div class="form-group full-width">
+                                <label for="receipt-description">Pembayaran Untuk</label>
+                                <textarea id="receipt-description" placeholder="Keterangan pembayaran..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Catatan</h3>
+                            <div class="form-group full-width">
+                                <textarea id="receipt-notes" placeholder="Catatan tambahan..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="clearForm('receipt')">Reset</button>
+                            <button type="button" class="btn btn-secondary" onclick="saveDocument('receipt')">Simpan</button>
+                            <button type="button" class="btn btn-primary" onclick="previewDocument('receipt')">Preview & Cetak</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Saved Documents Tab -->
+            <section id="saved" class="tab-content">
+                <div class="page-header">
+                    <h1>Dokumen Tersimpan</h1>
+                    <p>Kelola dokumen yang telah disimpan</p>
+                </div>
+
+                <div class="saved-documents">
+                    <div class="filter-bar">
+                        <select id="filter-type">
+                            <option value="all">Semua Dokumen</option>
+                            <option value="po">Purchase Order</option>
+                            <option value="invoice">Invoice</option>
+                            <option value="receipt">Bukti Bayar</option>
+                        </select>
+                        <input type="text" id="search-docs" placeholder="Cari dokumen...">
+                    </div>
+
+                    <div class="documents-list" id="documents-list">
+                        <p class="no-docs">Belum ada dokumen tersimpan</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="preview-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Preview Dokumen</h2>
+                <button class="modal-close" onclick="closePreview()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="preview-content" class="preview-document"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closePreview()">Tutup</button>
+                <button class="btn btn-primary" onclick="printDocument()">Cetak</button>
+                <button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

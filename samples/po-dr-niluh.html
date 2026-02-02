@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Order - dr Niluh Suwasanti, Sp.PK - Micromeet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563EB;
+            --text-primary: #1E293B;
+            --text-secondary: #64748B;
+            --border-color: #E2E8F0;
+            --background: #F8FAFC;
+            --warning-color: #F59E0B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background);
+            padding: 40px;
+            line-height: 1.5;
+        }
+
+        .document {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo svg {
+            width: 60px;
+            height: 60px;
+        }
+
+        .logo-text h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo-text p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .doc-title {
+            text-align: right;
+        }
+
+        .doc-title h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+        }
+
+        .doc-title .doc-number {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .info-section h4 {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-section p {
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .info-section strong {
+            color: var(--text-primary);
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .items-table th,
+        .items-table td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .items-table th {
+            background: var(--primary-color);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .items-table td {
+            font-size: 14px;
+        }
+
+        .items-table .text-right {
+            text-align: right;
+        }
+
+        .items-table tfoot td {
+            font-weight: 600;
+        }
+
+        .items-table tfoot tr:last-child td {
+            font-size: 18px;
+            color: var(--primary-color);
+            border-top: 2px solid var(--primary-color);
+            padding-top: 16px;
+        }
+
+        .payment-info {
+            background: var(--background);
+            padding: 24px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .payment-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .payment-info p {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .payment-pending {
+            background: #FEF3C7;
+            border: 1px solid var(--warning-color);
+            border-radius: 6px;
+            padding: 16px;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .payment-pending svg {
+            width: 24px;
+            height: 24px;
+            color: var(--warning-color);
+            flex-shrink: 0;
+        }
+
+        .payment-pending p {
+            margin: 0;
+            color: #92400E;
+            font-size: 13px;
+        }
+
+        .notes {
+            margin-bottom: 30px;
+        }
+
+        .notes h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .notes p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 60px;
+            padding-top: 20px;
+        }
+
+        .signature-box {
+            text-align: center;
+            width: 200px;
+        }
+
+        .signature-line {
+            border-top: 1px solid var(--text-primary);
+            margin-top: 80px;
+            padding-top: 8px;
+        }
+
+        .signature-box p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+        }
+
+        .print-btn:hover {
+            background: #1D4ED8;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+
+            .document {
+                box-shadow: none;
+                padding: 20px;
+            }
+
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">Cetak Dokumen</button>
+
+    <div class="document">
+        <div class="header">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="40" width="25" height="50" fill="#2563EB"/>
+                    <rect x="40" y="25" width="25" height="65" fill="#2563EB"/>
+                    <polygon points="40,25 65,25 90,0 65,0" fill="#2563EB"/>
+                    <rect x="70" y="10" width="20" height="80" fill="#2563EB"/>
+                </svg>
+                <div class="logo-text">
+                    <h2>Micromeet</h2>
+                    <p>Technology (Singapore) Pte Ltd</p>
+                </div>
+            </div>
+            <div class="doc-title">
+                <h1>Purchase Order</h1>
+                <p class="doc-number">PO-2026-002</p>
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-section">
+                <h4>Kepada</h4>
+                <p><strong>dr Niluh Suwasanti, Sp.PK</strong></p>
+            </div>
+            <div class="info-section">
+                <h4>Detail Purchase Order</h4>
+                <p><strong>Nomor PO:</strong> PO-2026-002</p>
+                <p><strong>Tanggal:</strong> 2 Februari 2026</p>
+            </div>
+        </div>
+
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">No</th>
+                    <th>Deskripsi</th>
+                    <th style="width: 80px;" class="text-right">Qty</th>
+                    <th style="width: 150px;" class="text-right">Harga</th>
+                    <th style="width: 150px;" class="text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Layanan Konsultasi Medis AI</td>
+                    <td class="text-right">1</td>
+                    <td class="text-right">Rp 7.500.000</td>
+                    <td class="text-right">Rp 7.500.000</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Pelatihan Sistem</td>
+                    <td class="text-right">1</td>
+                    <td class="text-right">Rp 5.000.000</td>
+                    <td class="text-right">Rp 5.000.000</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="text-right">Subtotal:</td>
+                    <td class="text-right">Rp 12.500.000</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="text-right">Pajak (11%):</td>
+                    <td class="text-right">Rp 1.375.000</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="text-right"><strong>Grand Total:</strong></td>
+                    <td class="text-right"><strong>Rp 13.875.000</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="payment-info">
+            <h4>Informasi Pembayaran</h4>
+            <p><strong>Metode Pembayaran:</strong> Bank Transfer</p>
+
+            <div class="payment-pending">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <p><strong>Informasi Bank Belum Lengkap</strong><br>
+                Mohon konfirmasi detail rekening bank (Nama Bank, Nomor Rekening, dan Atas Nama) untuk proses pembayaran.</p>
+            </div>
+        </div>
+
+        <div class="notes">
+            <h4>Catatan</h4>
+            <p>Mohon konfirmasi detail rekening bank untuk pembayaran.</p>
+        </div>
+
+        <div class="signatures">
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <p>Penerima</p>
+            </div>
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <p>Hormat Kami,<br>Micromeet Technology</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Micromeet Technology (Singapore) Pte Ltd</p>
+            <p><a href="https://web.micromeet.ai/home" target="_blank">https://web.micromeet.ai/home</a></p>
+        </div>
+    </div>
+</body>
+</html>

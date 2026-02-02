@@ -1,0 +1,18 @@
+{
+  "name": "invoice-generator-micromeet-ai",
+  "version": "1.0.0",
+  "description": "Purchase Order, Invoice, and Payment Receipt Generator for Micromeet Technology",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 3000 -o",
+    "dev": "npx http-server -p 3000 -c-1"
+  },
+  "keywords": [
+    "invoice",
+    "purchase-order",
+    "receipt",
+    "micromeet"
+  ],
+  "author": "Micromeet Technology (Singapore) Pte Ltd",
+  "license": "MIT"
+}
