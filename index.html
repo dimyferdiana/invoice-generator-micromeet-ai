@@ -12,12 +12,7 @@
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="logo-container">
-                <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="10" y="40" width="25" height="50" fill="#2563EB"/>
-                    <rect x="40" y="25" width="25" height="65" fill="#2563EB"/>
-                    <polygon points="40,25 65,25 90,0 65,0" fill="#2563EB"/>
-                    <rect x="70" y="10" width="20" height="80" fill="#2563EB"/>
-                </svg>
+                <img src="images/logo.png" alt="Micromeet Logo" class="logo" style="width: 40px; height: 40px; object-fit: contain;">
                 <span class="logo-text">Micromeet</span>
             </div>
 
@@ -55,7 +50,15 @@
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                         <polyline points="22,6 12,13 2,6"></polyline>
                     </svg>
-                    Bukti Bayar
+                    Bukti Terima
+                </button>
+                <button class="nav-item" data-tab="payment-voucher">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 4H3a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                        <path d="M16 14l-4-4-4 4"></path>
+                    </svg>
+                    Kwitansi
                 </button>
                 <button class="nav-item" data-tab="saved">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -68,8 +71,8 @@
             </nav>
 
             <div class="company-info">
-                <p>Micromeet Technology</p>
-                <p>(Singapore) Pte Ltd</p>
+                <p>PT Micromeet</p>
+                <p>Technology Indonesia</p>
                 <a href="https://web.micromeet.ai/home" target="_blank">web.micromeet.ai</a>
             </div>
         </aside>
@@ -118,7 +121,19 @@
                         </div>
                         <div class="stat-info">
                             <h3 id="receipt-count">0</h3>
-                            <p>Bukti Bayar</p>
+                            <p>Bukti Terima</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon voucher">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 4H3a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="voucher-count">0</h3>
+                            <p>Kwitansi</p>
                         </div>
                     </div>
                 </div>
@@ -145,7 +160,14 @@
                                 <line x1="12" y1="5" x2="12" y2="19"></line>
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                             </svg>
-                            Buat Bukti Bayar
+                            Buat Bukti Terima
+                        </button>
+                        <button class="action-btn" onclick="switchTab('payment-voucher')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Buat Kwitansi
                         </button>
                     </div>
                 </div>
@@ -447,11 +469,11 @@
                 </div>
             </section>
 
-            <!-- Receipt Tab -->
+            <!-- Receipt Tab (Uang Masuk) -->
             <section id="receipt" class="tab-content">
                 <div class="page-header">
-                    <h1>Bukti Bayar</h1>
-                    <p>Buat dan kelola Bukti Pembayaran</p>
+                    <h1>Bukti Terima</h1>
+                    <p>Buat bukti penerimaan pembayaran (uang masuk)</p>
                 </div>
 
                 <div class="form-container">
@@ -543,6 +565,110 @@
                 </div>
             </section>
 
+            <!-- Kwitansi Tab (Uang Keluar) -->
+            <section id="payment-voucher" class="tab-content">
+                <div class="page-header">
+                    <h1>Kwitansi</h1>
+                    <p>Buat kwitansi pembayaran keluar (uang keluar dari Micromeet)</p>
+                </div>
+
+                <div class="form-container">
+                    <form id="voucher-form" class="document-form">
+                        <div class="form-section">
+                            <h3>Informasi Kwitansi</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="voucher-number">Nomor Kwitansi</label>
+                                    <input type="text" id="voucher-number" placeholder="KW-001" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="voucher-date">Tanggal Pembayaran</label>
+                                    <input type="date" id="voucher-date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="voucher-invoice-ref">Referensi Invoice</label>
+                                    <input type="text" id="voucher-invoice-ref" placeholder="INV-001">
+                                </div>
+                                <div class="form-group">
+                                    <label for="voucher-po-ref">Referensi PO</label>
+                                    <input type="text" id="voucher-po-ref" placeholder="PO-001">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Dibayarkan Kepada</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="voucher-payee-name">Nama Penerima</label>
+                                    <input type="text" id="voucher-payee-name" placeholder="Nama penerima pembayaran" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="voucher-payee-address">Alamat</label>
+                                    <textarea id="voucher-payee-address" placeholder="Alamat lengkap"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="voucher-payee-bank">Bank Penerima</label>
+                                    <input type="text" id="voucher-payee-bank" placeholder="Nama bank penerima">
+                                </div>
+                                <div class="form-group">
+                                    <label for="voucher-payee-account">No. Rekening Penerima</label>
+                                    <input type="text" id="voucher-payee-account" placeholder="Nomor rekening penerima">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Detail Pembayaran</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="voucher-payment-method">Metode Pembayaran</label>
+                                    <select id="voucher-payment-method">
+                                        <option value="bank-transfer">Bank Transfer</option>
+                                        <option value="cash">Cash</option>
+                                        <option value="credit-card">Credit Card</option>
+                                        <option value="e-wallet">E-Wallet</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="voucher-source-bank">Bank Pengirim (Micromeet)</label>
+                                    <input type="text" id="voucher-source-bank" placeholder="Nama bank pengirim">
+                                </div>
+                                <div class="form-group">
+                                    <label for="voucher-source-account">No. Rekening Pengirim</label>
+                                    <input type="text" id="voucher-source-account" placeholder="Nomor rekening pengirim">
+                                </div>
+                                <div class="form-group">
+                                    <label for="voucher-amount">Jumlah Pembayaran</label>
+                                    <input type="number" id="voucher-amount" placeholder="0" min="0" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Keterangan</h3>
+                            <div class="form-group full-width">
+                                <label for="voucher-description">Pembayaran Untuk</label>
+                                <textarea id="voucher-description" placeholder="Keterangan pembayaran..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Catatan</h3>
+                            <div class="form-group full-width">
+                                <textarea id="voucher-notes" placeholder="Catatan tambahan..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="clearForm('voucher')">Reset</button>
+                            <button type="button" class="btn btn-secondary" onclick="saveDocument('voucher')">Simpan</button>
+                            <button type="button" class="btn btn-primary" onclick="previewDocument('voucher')">Preview & Cetak</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
             <!-- Saved Documents Tab -->
             <section id="saved" class="tab-content">
                 <div class="page-header">
@@ -556,7 +682,8 @@
                             <option value="all">Semua Dokumen</option>
                             <option value="po">Purchase Order</option>
                             <option value="invoice">Invoice</option>
-                            <option value="receipt">Bukti Bayar</option>
+                            <option value="receipt">Bukti Terima</option>
+                            <option value="voucher">Kwitansi</option>
                         </select>
                         <input type="text" id="search-docs" placeholder="Cari dokumen...">
                     </div>

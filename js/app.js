@@ -59,10 +59,10 @@ const sampleData = {
 // Company Information
 // ===================================
 const companyInfo = {
-    name: 'Micromeet Technology (Singapore) Pte Ltd',
+    name: 'PT Micromeet Technology Indonesia',
     shortName: 'Micromeet',
     website: 'https://web.micromeet.ai/home',
-    address: 'Singapore',
+    address: 'Indonesia',
     email: 'contact@micromeet.ai'
 };
 
@@ -71,6 +71,47 @@ const companyInfo = {
 // ===================================
 let savedDocuments = JSON.parse(localStorage.getItem('micromeetDocuments')) || [];
 let currentPreviewType = null;
+let logoBase64 = null;
+
+// ===================================
+// Logo Management
+// ===================================
+function loadLogoAsBase64() {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            logoBase64 = canvas.toDataURL('image/png');
+            resolve(logoBase64);
+        };
+        img.onerror = function() {
+            console.warn('Logo not found, using fallback SVG');
+            logoBase64 = null;
+            resolve(null);
+        };
+        img.src = 'images/logo.png';
+    });
+}
+
+function getLogoHtml(size = 60) {
+    if (logoBase64) {
+        return `<img src="${logoBase64}" alt="Micromeet Logo" style="width: ${size}px; height: ${size}px; object-fit: contain;">`;
+    }
+    // Fallback SVG jika logo tidak tersedia
+    return `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width: ${size}px; height: ${size}px;">
+            <rect x="10" y="40" width="25" height="50" fill="#2563EB"/>
+            <rect x="40" y="25" width="25" height="65" fill="#2563EB"/>
+            <polygon points="40,25 65,25 90,0 65,0" fill="#2563EB"/>
+            <rect x="70" y="10" width="20" height="80" fill="#2563EB"/>
+        </svg>
+    `;
+}
 
 // ===================================
 // Initialization
@@ -79,7 +120,10 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
 });
 
-function initializeApp() {
+async function initializeApp() {
+    // Load logo as base64 for PDF support
+    await loadLogoAsBase64();
+
     // Set up navigation
     setupNavigation();
 
@@ -142,7 +186,8 @@ function setDefaultDates() {
         'po-date': today,
         'invoice-date': today,
         'invoice-due-date': dueDateStr,
-        'receipt-date': today
+        'receipt-date': today,
+        'voucher-date': today
     };
 
     for (const [id, value] of Object.entries(dateInputs)) {
@@ -262,7 +307,7 @@ function clearForm(type) {
         }
 
         // Reset totals
-        if (type !== 'receipt') {
+        if (type !== 'receipt' && type !== 'voucher') {
             document.getElementById(`${type}-subtotal`).textContent = formatCurrency(0);
             document.getElementById(`${type}-tax-amount`).textContent = formatCurrency(0);
             document.getElementById(`${type}-grand-total`).textContent = formatCurrency(0);
@@ -335,6 +380,28 @@ function getFormData(type) {
             description: document.getElementById('receipt-description').value,
             notes: document.getElementById('receipt-notes').value
         };
+    } else if (type === 'voucher') {
+        return {
+            type: 'voucher',
+            number: document.getElementById('voucher-number').value,
+            date: document.getElementById('voucher-date').value,
+            invoiceRef: document.getElementById('voucher-invoice-ref').value,
+            poRef: document.getElementById('voucher-po-ref').value,
+            payee: {
+                name: document.getElementById('voucher-payee-name').value,
+                address: document.getElementById('voucher-payee-address').value,
+                bankName: document.getElementById('voucher-payee-bank').value,
+                accountNumber: document.getElementById('voucher-payee-account').value
+            },
+            payment: {
+                method: document.getElementById('voucher-payment-method').value,
+                sourceBank: document.getElementById('voucher-source-bank').value,
+                sourceAccount: document.getElementById('voucher-source-account').value,
+                amount: parseFloat(document.getElementById('voucher-amount').value) || 0
+            },
+            description: document.getElementById('voucher-description').value,
+            notes: document.getElementById('voucher-notes').value
+        };
     }
 }
 
@@ -386,6 +453,21 @@ function setFormData(type, data) {
         document.getElementById('receipt-amount').value = data.payment?.amount || 0;
         document.getElementById('receipt-description').value = data.description || '';
         document.getElementById('receipt-notes').value = data.notes || '';
+    } else if (type === 'voucher') {
+        document.getElementById('voucher-number').value = data.number || '';
+        document.getElementById('voucher-date').value = data.date || '';
+        document.getElementById('voucher-invoice-ref').value = data.invoiceRef || '';
+        document.getElementById('voucher-po-ref').value = data.poRef || '';
+        document.getElementById('voucher-payee-name').value = data.payee?.name || '';
+        document.getElementById('voucher-payee-address').value = data.payee?.address || '';
+        document.getElementById('voucher-payee-bank').value = data.payee?.bankName || '';
+        document.getElementById('voucher-payee-account').value = data.payee?.accountNumber || '';
+        document.getElementById('voucher-payment-method').value = data.payment?.method || 'bank-transfer';
+        document.getElementById('voucher-source-bank').value = data.payment?.sourceBank || '';
+        document.getElementById('voucher-source-account').value = data.payment?.sourceAccount || '';
+        document.getElementById('voucher-amount').value = data.payment?.amount || 0;
+        document.getElementById('voucher-description').value = data.description || '';
+        document.getElementById('voucher-notes').value = data.notes || '';
     }
 }
 
@@ -455,6 +537,8 @@ function previewDocument(type) {
         html = generateInvoicePreview(data);
     } else if (type === 'receipt') {
         html = generateReceiptPreview(data);
+    } else if (type === 'voucher') {
+        html = generateVoucherPreview(data);
     }
 
     document.getElementById('preview-content').innerHTML = html;
@@ -485,15 +569,10 @@ function generatePOPreview(data) {
     return `
         <div class="preview-header">
             <div class="preview-logo">
-                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="10" y="40" width="25" height="50" fill="#2563EB"/>
-                    <rect x="40" y="25" width="25" height="65" fill="#2563EB"/>
-                    <polygon points="40,25 65,25 90,0 65,0" fill="#2563EB"/>
-                    <rect x="70" y="10" width="20" height="80" fill="#2563EB"/>
-                </svg>
+                ${getLogoHtml(60)}
                 <div class="preview-logo-text">
                     <h2>Micromeet</h2>
-                    <p>Technology (Singapore) Pte Ltd</p>
+                    <p>Technology Indonesia</p>
                 </div>
             </div>
             <div class="preview-title">
@@ -568,7 +647,7 @@ function generatePOPreview(data) {
             </div>
             <div class="preview-signature">
                 <div class="signature-line"></div>
-                <p>Hormat Kami,<br>Micromeet Technology</p>
+                <p>Hormat Kami,<br>PT Micromeet Technology Indonesia</p>
             </div>
         </div>
 
@@ -603,15 +682,10 @@ function generateInvoicePreview(data) {
     return `
         <div class="preview-header">
             <div class="preview-logo">
-                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="10" y="40" width="25" height="50" fill="#2563EB"/>
-                    <rect x="40" y="25" width="25" height="65" fill="#2563EB"/>
-                    <polygon points="40,25 65,25 90,0 65,0" fill="#2563EB"/>
-                    <rect x="70" y="10" width="20" height="80" fill="#2563EB"/>
-                </svg>
+                ${getLogoHtml(60)}
                 <div class="preview-logo-text">
                     <h2>Micromeet</h2>
-                    <p>Technology (Singapore) Pte Ltd</p>
+                    <p>Technology Indonesia</p>
                 </div>
             </div>
             <div class="preview-title">
@@ -688,7 +762,7 @@ function generateInvoicePreview(data) {
             </div>
             <div class="preview-signature">
                 <div class="signature-line"></div>
-                <p>Hormat Kami,<br>Micromeet Technology</p>
+                <p>Hormat Kami,<br>PT Micromeet Technology Indonesia</p>
             </div>
         </div>
 
@@ -703,19 +777,14 @@ function generateReceiptPreview(data) {
     return `
         <div class="preview-header">
             <div class="preview-logo">
-                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="10" y="40" width="25" height="50" fill="#2563EB"/>
-                    <rect x="40" y="25" width="25" height="65" fill="#2563EB"/>
-                    <polygon points="40,25 65,25 90,0 65,0" fill="#2563EB"/>
-                    <rect x="70" y="10" width="20" height="80" fill="#2563EB"/>
-                </svg>
+                ${getLogoHtml(60)}
                 <div class="preview-logo-text">
                     <h2>Micromeet</h2>
-                    <p>Technology (Singapore) Pte Ltd</p>
+                    <p>Technology Indonesia</p>
                 </div>
             </div>
             <div class="preview-title">
-                <h1>Bukti Bayar</h1>
+                <h1>Bukti Terima</h1>
                 <p>${data.number || 'RCP-000'}</p>
             </div>
         </div>
@@ -768,7 +837,84 @@ function generateReceiptPreview(data) {
             </div>
             <div class="preview-signature">
                 <div class="signature-line"></div>
-                <p>Penerima,<br>Micromeet Technology</p>
+                <p>Penerima,<br>PT Micromeet Technology Indonesia</p>
+            </div>
+        </div>
+
+        <div class="preview-company-footer">
+            <p>${companyInfo.name}</p>
+            <p><a href="${companyInfo.website}" target="_blank">${companyInfo.website}</a></p>
+        </div>
+    `;
+}
+
+function generateVoucherPreview(data) {
+    return `
+        <div class="preview-header">
+            <div class="preview-logo">
+                ${getLogoHtml(60)}
+                <div class="preview-logo-text">
+                    <h2>Micromeet</h2>
+                    <p>Technology Indonesia</p>
+                </div>
+            </div>
+            <div class="preview-title">
+                <h1>Kwitansi</h1>
+                <p>${data.number || 'KW-000'}</p>
+            </div>
+        </div>
+
+        <div class="preview-info-grid">
+            <div class="preview-info-section">
+                <h4>Dibayarkan Kepada</h4>
+                <p><strong>${data.payee.name || '-'}</strong></p>
+                ${data.payee.address ? `<p>${data.payee.address}</p>` : ''}
+                ${data.payee.bankName ? `<p>Bank: ${data.payee.bankName}</p>` : ''}
+                ${data.payee.accountNumber ? `<p>No. Rek: ${data.payee.accountNumber}</p>` : ''}
+            </div>
+            <div class="preview-info-section">
+                <h4>Detail Pembayaran</h4>
+                <p><strong>Nomor:</strong> ${data.number || '-'}</p>
+                <p><strong>Tanggal:</strong> ${formatDate(data.date)}</p>
+                ${data.invoiceRef ? `<p><strong>Ref. Invoice:</strong> ${data.invoiceRef}</p>` : ''}
+                ${data.poRef ? `<p><strong>Ref. PO:</strong> ${data.poRef}</p>` : ''}
+            </div>
+        </div>
+
+        <div class="preview-payment-info" style="text-align: center; padding: 30px;">
+            <h4 style="font-size: 16px; margin-bottom: 20px;">Jumlah Pembayaran</h4>
+            <p style="font-size: 32px; font-weight: 700; color: #2563EB; margin-bottom: 20px;">${formatCurrency(data.payment.amount)}</p>
+            <p style="font-size: 14px; color: #64748B;">(${numberToWords(data.payment.amount)})</p>
+        </div>
+
+        <div class="preview-info-grid">
+            <div class="preview-info-section">
+                <h4>Sumber Pembayaran</h4>
+                <p><strong>Metode:</strong> ${getPaymentMethodLabel(data.payment.method)}</p>
+                ${data.payment.sourceBank ? `<p><strong>Bank Pengirim:</strong> ${data.payment.sourceBank}</p>` : ''}
+                ${data.payment.sourceAccount ? `<p><strong>No. Rekening:</strong> ${data.payment.sourceAccount}</p>` : ''}
+            </div>
+            <div class="preview-info-section">
+                <h4>Keterangan</h4>
+                <p>${data.description || '-'}</p>
+            </div>
+        </div>
+
+        ${data.notes ? `
+        <div class="preview-notes">
+            <h4>Catatan</h4>
+            <p>${data.notes}</p>
+        </div>
+        ` : ''}
+
+        <div class="preview-footer">
+            <div class="preview-signature">
+                <div class="signature-line"></div>
+                <p>Penerima Pembayaran</p>
+            </div>
+            <div class="preview-signature">
+                <div class="signature-line"></div>
+                <p>Pembayar,<br>PT Micromeet Technology Indonesia</p>
             </div>
         </div>
 
@@ -797,6 +943,13 @@ function downloadPDF() {
 // ===================================
 function saveDocument(type) {
     const data = getFormData(type);
+
+    if (!data) {
+        alert('Error: Tipe dokumen tidak valid - ' + type);
+        console.error('getFormData returned undefined for type:', type);
+        return;
+    }
+
     data.id = Date.now();
     data.savedAt = new Date().toISOString();
 
@@ -826,7 +979,8 @@ function loadSavedDocuments() {
                 doc.number,
                 doc.recipient?.name,
                 doc.customer?.name,
-                doc.payer?.name
+                doc.payer?.name,
+                doc.payee?.name
             ].filter(Boolean).join(' ').toLowerCase();
             return searchableText.includes(search);
         });
@@ -838,7 +992,7 @@ function loadSavedDocuments() {
     }
 
     list.innerHTML = filtered.map(doc => {
-        const name = doc.recipient?.name || doc.customer?.name || doc.payer?.name || '-';
+        const name = doc.recipient?.name || doc.customer?.name || doc.payer?.name || doc.payee?.name || '-';
         const typeLabel = getDocTypeLabel(doc.type);
 
         return `
@@ -868,7 +1022,11 @@ function loadDocument(id) {
     const doc = savedDocuments.find(d => d.id === id);
     if (doc) {
         setFormData(doc.type, doc);
-        switchTab(doc.type === 'po' ? 'purchase-order' : doc.type);
+        // Map document type to tab ID
+        let tabId = doc.type;
+        if (doc.type === 'po') tabId = 'purchase-order';
+        if (doc.type === 'voucher') tabId = 'payment-voucher';
+        switchTab(tabId);
     }
 }
 
@@ -901,10 +1059,12 @@ function updateDashboardStats() {
     const poCount = savedDocuments.filter(d => d.type === 'po').length;
     const invoiceCount = savedDocuments.filter(d => d.type === 'invoice').length;
     const receiptCount = savedDocuments.filter(d => d.type === 'receipt').length;
+    const voucherCount = savedDocuments.filter(d => d.type === 'voucher').length;
 
     document.getElementById('po-count').textContent = poCount;
     document.getElementById('invoice-count').textContent = invoiceCount;
     document.getElementById('receipt-count').textContent = receiptCount;
+    document.getElementById('voucher-count').textContent = voucherCount;
 }
 
 // ===================================
@@ -938,7 +1098,8 @@ function getDocTypeLabel(type) {
     const labels = {
         'po': 'Purchase Order',
         'invoice': 'Invoice',
-        'receipt': 'Bukti Bayar'
+        'receipt': 'Bukti Terima',
+        'voucher': 'Kwitansi'
     };
     return labels[type] || type;
 }
