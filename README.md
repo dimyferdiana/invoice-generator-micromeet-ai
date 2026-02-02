@@ -12,6 +12,9 @@ A simple and flexible invoice, purchase order, and receipt generator with AI cap
 - Multiple output formats (text and JSON)
 - CLI interface for easy use
 - Extensible API for programmatic use
+- **AI Integration** with Claude teleport sessions
+- AI-powered invoice suggestions and validation
+- Natural language invoice parsing (coming soon)
 
 ## Installation
 
@@ -112,6 +115,40 @@ const text = generator.formatAsText(invoice);
 console.log(text);
 ```
 
+### AI Teleport Session
+
+Experience AI-powered invoice generation with Claude:
+
+```bash
+node src/teleport.js session_01GRRgxs6yUhxrMTTo2fhmfi
+```
+
+This will:
+- Initialize an AI teleport session
+- Generate a sample invoice
+- Provide AI-powered suggestions
+- Generate intelligent descriptions
+- Demonstrate AI integration capabilities
+
+### AI Features
+
+The AI integration module provides:
+
+```javascript
+import { AIIntegration } from './src/ai-integration.js';
+
+// Create AI integration
+const ai = new AIIntegration({ 
+  sessionId: 'your_session_id' 
+});
+
+// Get suggestions for an invoice
+const suggestions = await ai.getInvoiceSuggestions(invoice);
+
+// Generate AI description
+const description = await ai.generateInvoiceDescription(invoice);
+```
+
 ## API Reference
 
 ### InvoiceGenerator
@@ -138,6 +175,28 @@ Options:
 - `generatePONumber()` - Generate unique PO number
 - `generateReceiptNumber()` - Generate unique receipt number
 - `calculateDueDate(days)` - Calculate due date
+
+### AIIntegration
+
+#### Constructor
+
+```javascript
+new AIIntegration(options)
+```
+
+Options:
+- `sessionId` - Teleport session ID
+- `apiKey` - Claude API key (optional)
+- `model` - AI model to use (default: claude-3-5-sonnet-20241022)
+
+#### Methods
+
+- `initTeleportSession(sessionId)` - Initialize teleport session
+- `parseInvoiceFromPrompt(prompt)` - Parse natural language to invoice data
+- `getInvoiceSuggestions(invoice)` - Get AI suggestions for invoice
+- `generateInvoiceDescription(invoice)` - Generate AI description
+- `isTeleportSessionActive()` - Check if session is active
+- `getSessionInfo()` - Get session information
 
 ## Testing
 
