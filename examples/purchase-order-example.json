@@ -1,0 +1,29 @@
+{
+  "companyName": "Supply Chain Solutions",
+  "companyAddress": "789 Industrial Pkwy, Chicago, IL 60601",
+  "companyPhone": "312-555-0456",
+  "companyEmail": "procurement@supplysolutions.com",
+  "vendorName": "Office Supplies Inc.",
+  "vendorAddress": "321 Wholesale St, Chicago, IL 60602",
+  "vendorEmail": "sales@officesupplies.com",
+  "items": [
+    {
+      "description": "Premium Copy Paper (Case of 10 reams)",
+      "quantity": 20,
+      "unitPrice": 45.00
+    },
+    {
+      "description": "Ballpoint Pens (Box of 50)",
+      "quantity": 10,
+      "unitPrice": 12.50
+    },
+    {
+      "description": "Desk Organizer Sets",
+      "quantity": 15,
+      "unitPrice": 28.00
+    }
+  ],
+  "tax": 7.0,
+  "notes": "Please deliver to warehouse loading dock.",
+  "shippingAddress": "789 Industrial Pkwy, Loading Dock B, Chicago, IL 60601"
+}

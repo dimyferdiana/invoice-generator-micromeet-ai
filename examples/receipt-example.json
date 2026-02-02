@@ -1,0 +1,28 @@
+{
+  "companyName": "The Coffee Shop",
+  "companyAddress": "555 Main Street, Seattle, WA 98101",
+  "companyPhone": "206-555-0789",
+  "companyEmail": "hello@coffeeshop.com",
+  "customerName": "John Doe",
+  "customerEmail": "john.doe@email.com",
+  "items": [
+    {
+      "description": "Cappuccino (Large)",
+      "quantity": 1,
+      "unitPrice": 5.50
+    },
+    {
+      "description": "Blueberry Muffin",
+      "quantity": 1,
+      "unitPrice": 3.50
+    },
+    {
+      "description": "Orange Juice",
+      "quantity": 1,
+      "unitPrice": 4.00
+    }
+  ],
+  "tax": 10.1,
+  "paymentMethod": "Credit Card",
+  "notes": "Thank you for visiting! Have a great day!"
+}

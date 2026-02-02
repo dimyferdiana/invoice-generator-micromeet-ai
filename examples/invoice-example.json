@@ -1,0 +1,29 @@
+{
+  "companyName": "Acme Corporation",
+  "companyAddress": "123 Business Ave, Suite 100, San Francisco, CA 94102",
+  "companyPhone": "415-555-0123",
+  "companyEmail": "billing@acmecorp.com",
+  "clientName": "TechStart Inc.",
+  "clientAddress": "456 Startup Blvd, Palo Alto, CA 94301",
+  "clientEmail": "accounts@techstart.com",
+  "items": [
+    {
+      "description": "Web Development Services - Month of January 2026",
+      "quantity": 160,
+      "unitPrice": 125.00
+    },
+    {
+      "description": "Cloud Hosting & Maintenance",
+      "quantity": 1,
+      "unitPrice": 500.00
+    },
+    {
+      "description": "SSL Certificate (Annual)",
+      "quantity": 1,
+      "unitPrice": 150.00
+    }
+  ],
+  "tax": 9.5,
+  "notes": "Payment is due within 30 days. Thank you for your business!",
+  "paymentTerms": "Net 30"
+}

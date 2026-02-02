@@ -1,0 +1,23 @@
+{
+  "name": "invoice-generator-micromeet-ai",
+  "version": "1.0.0",
+  "description": "Invoice, purchase order, and receipt generator with AI capabilities",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "invoice",
+    "generator",
+    "receipt",
+    "purchase-order",
+    "ai"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bin": {
+    "invoice-gen": "./src/cli.js"
+  }
+}
